@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('git push') {
+            steps {
+                git branch: 'J2EE', url: 'https://github.com/shashirajraja/onlinebookstore.git'
+            }
+        }
+          
+        stage('mvn build') {
+            steps {
+               sh'mvn clean package'
+            }
+        }
+         
+          stage('deploy') {
+            steps {
+               deploy adapters: [tomcat9(credentialsId: 'tomcat9', path: '', url: 'http://172.31.5.175:8080')], contextPath: '/', war: '**/*.war'
+            }
+        }
+      }
+
+
+    }
